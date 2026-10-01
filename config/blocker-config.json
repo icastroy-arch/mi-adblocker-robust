@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "updatedAt": "2026-09-30T19:15:00Z",
+  "selectors": {
+    "adSkipButton": ".ytp-skip-ad-button, .ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-ad-skip-button-slot",
+    "adContainer": ".ad-showing, .ad-interrupting",
+    "videoPlayer": ".html5-main-video, video",
+    "antiAdblockWall": "yt-playability-error-supported-renderers, #error-screen"
+  },
+  "settings": {
+    "autoMuteAds": true,
+    "fastForwardSpeed": 16.0
+  }
+}
