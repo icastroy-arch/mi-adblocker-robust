@@ -1,14 +1,20 @@
 let currentConfig = {
   selectors: {
-    adSkipButton: ".ytp-skip-ad-button, .ytp-ad-skip-button",
-    adContainer: ".ad-showing, .ad-interrupting",
+    adSkipButton: [
+      ".ytp-skip-ad-button",
+      ".ytp-ad-skip-button",
+      ".ytp-ad-skip-button-modern",
+      "button[id^='skip-button']",
+      ".ytp-ad-skip-button-container button"
+    ].join(", "),
+    adContainer: ".ad-showing, .ad-interrupting, .ytp-ad-overlay-open",
     videoPlayer: ".html5-main-video",
     antiAdblockWall: "yt-playability-error-supported-renderers"
   },
   settings: { autoMuteAds: true, fastForwardSpeed: 16.0 }
 };
 
-// Cargar configuración inicial
+// Cargar configuración inicial desde storage local
 chrome.storage.local.get(["config"], (result) => {
   if (result.config) {
     currentConfig = result.config;
@@ -30,12 +36,12 @@ function processAdBypasser() {
   const isAdShowing = document.querySelector(selectors.adContainer);
   const skipButton = document.querySelector(selectors.adSkipButton);
 
-  // 1. Clic automático en botón de saltar
+  // 1. Clic automático e inmediato en el botón de saltar
   if (skipButton) {
     skipButton.click();
   }
 
-  // 2. Aceleración y silenciamiento si el anuncio está activo
+  // 2. Aceleración y silencio automático durante el anuncio
   if (isAdShowing && video) {
     if (settings.autoMuteAds && !video.muted) {
       video.muted = true;
@@ -46,10 +52,10 @@ function processAdBypasser() {
     }
   }
 
-  // 3. Detección de muros Anti-Adblock
+  // 3. Detección real de muro Anti-Adblock (solo si el elemento es visible)
   const wall = document.querySelector(selectors.antiAdblockWall);
-  if (wall) {
-    console.warn("[AdSkipper] Detección de muro de restricción de YouTube activa.");
+  if (wall && wall.offsetWidth > 0 && wall.offsetHeight > 0) {
+    console.log("[AdSkipper] Muro de restricción desplegado en pantalla.");
   }
 }
 
